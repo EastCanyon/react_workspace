@@ -1,5 +1,5 @@
-import { useContext } from "react";
-import { TodoContext } from "../context/TodoContext";
+import { useContext } from 'react';
+import { TodoContext } from '../contexts/TodoContext';
 
 const Label = ({ todo }) => {
   const { updateTodo, deleteTodo } = useContext(TodoContext);
@@ -7,7 +7,7 @@ const Label = ({ todo }) => {
   return (
     <h3>
       <label
-        className={todo.completed == 1 ? "completed" : null}
+        className={todo.completed === 1 ? 'completed' : null}
         onClick={() => {
           updateTodo(todo.id);
         }}

@@ -4,7 +4,7 @@ const Label = (props) => {
   return (
     <h3>
       <label
-        className={todo.completed == 1 ? "completed" : null}
+        className={todo.completed === 1 ? 'completed' : null}
         onClick={() => {
           updateTodo(todo.id);
         }}
