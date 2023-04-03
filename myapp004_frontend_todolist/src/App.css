@@ -38,5 +38,5 @@
 }
 
 .completed {
-  text-decoration: overline underline line-through;
+  text-decoration: line-through;
 }

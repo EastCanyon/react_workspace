@@ -1,21 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
 import './App.css';
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { baseUrl } from './apiurl';
 
 function App() {
-  const inputRef = useRef('');
+  const inputRef = useRef();
 
   const wrap = {
     width: '500px',
-    border: '1ps solid black',
+    border: '1px solid black',
     margin: '10px auto',
   };
 
   // let boardList = [
-  //   { id: 1, todoname: '운동', completed: 0 },
-  //   { id: 2, todoname: 'sns', completed: 0 },
-  //   { id: 3, todoname: '사진정리', completed: 0 },
+  //   { id: 1, todoname: '아침먹기', completed: 0 },
+  //   { id: 2, todoname: '점심먹기', completed: 0 },
+  //   { id: 3, todoname: '저녁먹기', completed: 0 },
   // ];
 
   const [todos, setTodos] = useState([]);
@@ -28,20 +28,21 @@ function App() {
   const insertTodo = async (e) => {
     e.preventDefault();
 
+    //post방식
     await axios
-      .post(baseUrl + '/todo/', { todoname: input })
-      .then((Response) => {
-        console.log(Response.data);
+      .post(baseUrl + '/todo', { todoname: input })
+      .then((response) => {
+        console.log(response.data);
         setInput('');
         getTodos();
       });
   };
 
-  const deletetodo = async (id) => {
+  const deleteTodo = async (id) => {
     await axios
       .delete(baseUrl + '/todo/' + id)
-      .then((Response) => {
-        console.log(Response.data);
+      .then((response) => {
+        console.log(response.data);
         getTodos();
       })
       .catch((error) => {
@@ -50,13 +51,16 @@ function App() {
   };
 
   const updateTodo = async (id) => {
+    console.log('id : ' + id);
+    console.log(todos.filter((todo) => todo.id === id));
+
     let completed = todos.filter((todo) => todo.id === id)[0].completed;
     console.log('completed : ' + completed);
 
     await axios
       .put(baseUrl + '/todo/' + id + '/' + completed)
-      .then((Response) => {
-        console.log(Response.data);
+      .then((response) => {
+        console.log(response.data);
         getTodos();
       })
       .catch((error) => {
@@ -64,41 +68,33 @@ function App() {
       });
   };
 
-  // async await 순차적 실행
-  // async function getTodos(){}
+  //async function getTodos(){}
   const getTodos = async () => {
     await axios
-      .get(`${baseUrl}/todo/all`) // baseUrl + '/todo/all'
-      .then((Response) => {
-        console.log(Response);
-        console.log('11111111');
-        setTodos(Response.data);
+      .get(`${baseUrl}/todo/all`)
+      .then((response) => {
+        console.log(response);
+        console.log('111111111111');
+        setTodos(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-    console.log('222222222');
+    console.log('22222222222');
   };
 
   useEffect(() => {
     getTodos();
-    inputRef.current.focus();
   }, []);
 
   useEffect(() => {
     inputRef.current.focus();
   }, [input]);
 
-  /*
-SOP(Same-origin policy) vs CORS(Cross-Origin Resource Sharing)
-fetch vs axios
-차이점 알아보기
-*/
-
   return (
     <div className='App' style={wrap}>
       <h1>TODO LIST</h1>
-      <form onSubmit={insertTodo} action='#'>
+      <form onSubmit={insertTodo}>
         <input
           type='text'
           required={true}
@@ -106,8 +102,9 @@ fetch vs axios
           onChange={handleChangeText}
           ref={inputRef}
         />
-        <input type='submit' value='Cteate' />
+        <input type='submit' value='Create' />
       </form>
+
       {todos
         ? todos.map((todo) => {
             return (
@@ -123,7 +120,7 @@ fetch vs axios
                   </label>
                   <label
                     onClick={() => {
-                      deletetodo(todo.id);
+                      deleteTodo(todo.id);
                     }}
                   >
                     &nbsp;&nbsp;삭제
